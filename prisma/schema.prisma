@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model promotions {
+  promotion_id                     Int                      @id @default(autoincrement())
+  year                             String                   @db.Char(4)
+  week_number                      String                   @db.Char(2)
+  promotion_code                   String                   @db.VarChar(20)
+  promotion_title                  String                   @db.VarChar(100)
+  sale_start_date                  DateTime                 @db.Date
+  sale_start_time                  DateTime                 @default(dbgenerated("'00:00:00'")) @db.Time(0)
+  sale_end_date                    DateTime                 @db.Date
+  sale_end_time                    DateTime                 @default(dbgenerated("'23:59:59'")) @db.Time(0)
+  first_closing_date               DateTime?                @db.DateTime(0)
+  last_closing_date                DateTime                 @db.DateTime(0)
+  dept_first_closing_date          DateTime?                @db.DateTime(0)
+  dept_last_closing_date           DateTime?                @db.DateTime(0)
+  pop_store_num_inst_start_date    DateTime?                @db.DateTime(0)
+  pop_store_num_inst_end_date      DateTime?                @db.DateTime(0)
+  production_company               String?                  @db.VarChar(100)
+  store_price_closing_date         DateTime?                @db.DateTime(0)
+  authorize_flag                   Boolean?
+  authorize_user                   Int?
+  authorize_date                   DateTime?                @db.DateTime(0)
+  promotion_theme_link_update_user Int?
+  promotion_theme_link_update_date DateTime?                @db.DateTime(0)
+  create_user                      Int
+  create_date                      DateTime                 @default(now()) @db.DateTime(0)
+  update_user                      Int
+  update_date                      DateTime                 @default(now()) @db.DateTime(0)
+  delete_user                      Int?
+  delete_date                      DateTime?                @db.DateTime(0)
+  deleted                          Boolean                  @default(false)
+  promotion_theme_link             promotion_theme_link[]
+
+  @@index([promotion_code], map: "promotions_IX1")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model promotion_theme_link {
+  promotion_id Int
+  theme_id     Int
+  themes       themes     @relation(fields: [theme_id], references: [theme_id], onDelete: NoAction, onUpdate: NoAction, map: "promotion_theme_link_FK1")
+  promotions   promotions @relation(fields: [promotion_id], references: [promotion_id], onDelete: NoAction, onUpdate: NoAction, map: "promotion_theme_link_FK2")
+
+  @@id([promotion_id, theme_id])
+  @@index([theme_id], map: "promotion_theme_link_FK1")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model themes {
+  theme_id                       Int                    @id @default(autoincrement())
+  theme_code                     String                 @db.Char(20)
+  theme_class                    String                 @db.Char(2)
+  theme_type                     String                 @db.Char(2)
+  baitai_keisai_flag             Boolean
+  pop_seisaku_flag               Boolean
+  performance_class              String                 @db.Char(2)
+  theme_sale_start_date          DateTime               @db.Date
+  theme_sale_start_time          DateTime               @default(dbgenerated("'00:00:00'")) @db.Time(0)
+  theme_sale_end_date            DateTime               @db.Date
+  theme_sale_end_time            DateTime               @default(dbgenerated("'23:59:59'")) @db.Time(0)
+  theme_title                    String                 @db.VarChar(100)
+  sub_title                      String?                @db.VarChar(100)
+  comment                        String?                @db.VarChar(1000)
+  theme_goods_link_update_user   Int?
+  theme_goods_link_update_date   DateTime?              @db.DateTime(0)
+  theme_content_link_update_user Int?
+  theme_content_link_update_date DateTime?              @db.DateTime(0)
+  tag_link_update_user           Int?
+  tag_link_update_date           DateTime?              @db.DateTime(0)
+  esl_use_flag                   Boolean                @default(false)
+  esl_priority                   Int?
+  esl_remarks                    String?                @db.VarChar(1000)
+  esl_update_user                Int?
+  esl_update_date                DateTime?              @db.DateTime(0)
+  create_user                    Int
+  create_date                    DateTime               @default(now()) @db.DateTime(0)
+  update_user                    Int
+  update_date                    DateTime               @default(now()) @db.DateTime(0)
+  delete_user                    Int?
+  delete_date                    DateTime?              @db.DateTime(0)
+  deleted                        Boolean                @default(false)
+  // esl_display_period             esl_display_period[]
+  // esl_theme_store_link           esl_theme_store_link[]
+  promotion_theme_link           promotion_theme_link[]
+  // theme_content_link             theme_content_link[]
+  // theme_goods                    theme_goods[]
+
+  @@index([theme_code], map: "themes_IX1")
+}

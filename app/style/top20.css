@@ -1,0 +1,21 @@
+header {
+    padding-left: 16px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  #container {
+    display: flex;
+    height: 100%;
+  }
+  
+  #sidebar {
+    max-width: 320px;
+    padding: 16px;
+  }
+  
+  #sidebar li {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
